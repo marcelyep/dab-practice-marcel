@@ -1,0 +1,55 @@
+bundle:
+  name: dab-practice
+
+include:
+  - resources/*.yml
+
+variables:
+  catalog:
+    default: data-growth
+  schema:
+    default: ${resources.schemas.demo_schema.name}
+  volumepath:
+    default: /Volumes/${var.catalog}/${var.schema}/${resources.volumes.demo_volume.name}/     
+
+presets:
+  tags:
+    project: ${workspace.current_user.short_name}
+    env: ${bundle.target}
+  trigger_pause_status: PAUSED
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://adb-581756823031993.13.azuredatabricks.net/     
+
+  qa:
+    mode: production
+    workspace:
+      host: https://adb-581756823031993.13.azuredatabricks.net/
+      root_path: /Workspace/dab-practice/${workspace.current_user.short_name}/${bundle.target}/.bundle
+      file_path: /Workspace/dab-practice/${workspace.current_user.short_name}/${bundle.target}
+    presets:
+      name_prefix: "[qa ${workspace.current_user.short_name}]"
+
+  prod:
+    mode: production
+    workspace:
+      host: https://adb-581756823031993.13.azuredatabricks.net/
+      root_path: /Workspace/dab-practice/${workspace.current_user.short_name}/${bundle.target}/.bundle
+      file_path: /Workspace/dab-practice/${workspace.current_user.short_name}/${bundle.target}
+    presets:
+      name_prefix: "[prod ${workspace.current_user.short_name}]"
+      trigger_pause_status: UNPAUSED
+    resources:
+      jobs:
+        demo_jobs:
+          email_notifications:
+            on_success:
+             - nicolas.mauvecin@lovelytics.com
+
+
+
+

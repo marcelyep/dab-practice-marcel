@@ -1,0 +1,7 @@
+resources:
+  volumes:
+    demo_volume:
+      name: inputs
+      catalog_name: ${var.catalog}
+      schema_name: ${var.schema}
+      
